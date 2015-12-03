@@ -13,3 +13,6 @@ HEADERS += \
     header.h
 
 LIBS += -ldl
+
+target.path = /usr/bin/
+INSTALLS += target
