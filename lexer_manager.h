@@ -10,7 +10,6 @@ class lexer_manager
 private:
     void* libhandler;
     char* lib_name;
-
 public:
     lexer_manager(char *libname, lexer_manager* source);
     lexer_manager(char *libname);

@@ -10,15 +10,18 @@
 
 #include "lexer_manager.h"
 
+const uint8_t WCHAR_SIZE = sizeof(wchar_t);
+const uint8_t CHAR_SIZE = sizeof(char);
+
 std::streamsize stdin_chunk_size = 100;  // TODO: paraméterezhetőség
-//std::wistream* winput = &std::wcin;
-//std::istream* input = &std::cin;
-//std::wostream* woutput = &std::wcout;
-//std::ostream* output = &std::cout;
+std::wistream *winput = &std::wcin;
+std::istream *input = &std::cin;
+std::wostream *woutput = &std::wcout;
+std::ostream *output = &std::cout;
 
 
 template <typename CHAR_T>
-std::basic_string<CHAR_T> read_string(bool& finished, bool& ok, std::basic_istream<CHAR_T> &input) {
+inline std::basic_string<CHAR_T> read_string(bool& finished, bool& ok, std::basic_istream<CHAR_T> &input) {
     std::basic_string<CHAR_T> buffer;
     if (input) {
         buffer.resize(stdin_chunk_size);
@@ -41,13 +44,13 @@ std::basic_string<CHAR_T> read_string(bool& finished, bool& ok, std::basic_istre
 
 std::wstring read_from_winput(bool& finished, bool& ok)
 {
-    return read_string(finished, ok, std::wcin);
+    return read_string(finished, ok, *winput);
 }
 
 
 std::string read_from_input(bool& finished, bool& ok)
 {
-    return read_string(finished, ok, std::cin);
+    return read_string(finished, ok, *input);
 }
 
 
@@ -74,16 +77,25 @@ void run_char(lexer_manager* last_lexer, std::ostream &output) {
 }
 
 
+//void func(std::vector<char*> libs, char* input_filename = 0, char* output_filename = 0)
+//{
 
-/**************************************************************
- *  The main function
- **************************************************************/
+//}
+
+
+
+//------------------------- THE MAIN FUNCTION -------------------------
 int main(int argc, char *argv[])
 {
-    setlocale(LC_ALL, "hu_HU.utf8");
 
-    if (sizeof(wchar_t) < 4)
-        std::wcerr << "WARNING! Non 4 bytes character representation may occurs problems." << std::endl;
+    /// -i input
+    /// -o output into a new file (or overwrite it) (like >)
+    /// -a append into an existing file (or create it) (like >>)
+    /// -c encoding
+
+    // TODO: Ne kelljen, hanem legyen rendszerkódolás.
+    // setlocale(LC_ALL, "hu_HU.utf8");
+    //setlocale(LC_ALL, "C.UTF-8");
 
     if (argc <= 1) {
         std::wcerr << "No libraries given." << std::endl;
@@ -91,19 +103,23 @@ int main(int argc, char *argv[])
     }
 
     std::vector<char*> libraries;
+    libraries.reserve(argc);
     for (int var = 1; var < argc; ++var) {
         libraries.push_back(argv[var]);
     }
 
+
+    //------------------- INITIALIZE THE FIRST PLUGIN --------------------
     std::vector<lexer_manager*> managers;
-    // TODO: kódolás!
+    managers.reserve(libraries.size());
     managers.push_back(new lexer_manager(libraries[0]));
 
+
     //---------------------- DECIDE THE CHAR TYPE ----------------------
-    if (managers[0]->char_size == (uint8_t)sizeof(char)) {
+    if (managers[0]->char_size == CHAR_SIZE) {
         managers[0]->set_source_func8(read_from_input);
     }
-    else if (managers[0]->char_size == (uint8_t)sizeof(wchar_t)) {
+    else if (managers[0]->char_size == WCHAR_SIZE) {
         managers[0]->set_source_func32(read_from_winput);
     }
     else {
@@ -111,18 +127,23 @@ int main(int argc, char *argv[])
         return ERROR_LIB_CHARSIZE_INVALID;
     }
 
+
     //-------------------- INITIALIZE OTHER PLUGINS --------------------
     for (uint16_t var = 1; var < libraries.size(); ++var) {
         managers.push_back(new lexer_manager(libraries[var], managers.back()));
     }
 
-    //------------------------ RUN AFTER INIT ------------------------
 
+    //------------------------ RUN AFTER INIT ------------------------
     // TODO ebbe az if-be helyezhető el a bemenet és a kimenet specifikálása, fájl esetén a kódolás is.
-    if (managers[0]->char_size == (uint8_t)sizeof(char))
-        run_char(managers.back(), std::cout);
-    else if (managers[0]->char_size == (uint8_t)sizeof(wchar_t))
-        run_wide(managers.back(), std::wcout);
+    if (managers[0]->char_size == CHAR_SIZE) {
+        run_char(managers.back(), *output);
+    }
+    else if (managers[0]->char_size == WCHAR_SIZE) {
+        // std::wcin.imbue(std::locale("C.UTF-8")); TODO: kell?
+        run_wide(managers.back(), *woutput);
+    }
+
 
     //------------------------ DELETE AFTER RUN ------------------------
     for (lexer_manager* lm: managers) {

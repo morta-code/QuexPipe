@@ -1,5 +1,6 @@
 #include "lexer_manager.h"
 
+//------------------- LEXER_MANAGER DEFINITIONS --------------------
 
 lexer_manager::lexer_manager(char *libname, lexer_manager *source)
 {
@@ -22,6 +23,7 @@ lexer_manager::lexer_manager(char *libname, lexer_manager *source)
         set_source_func32(source->receive32);
     }
 }
+
 
 lexer_manager::lexer_manager(char *libname)
 {
