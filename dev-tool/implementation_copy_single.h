@@ -1,7 +1,6 @@
 #pragma once
 
-#include "quexpipeitem.h"
-#include "spaces"
+#include <quexpipe/quexpipeitem.h>
 
 /**************************************************************
  *   The hidden part of the dynamic library

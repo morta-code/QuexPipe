@@ -82,7 +82,7 @@ inline float qp_atof(const CHAR_T* lexeme)
  * Appends a cstring to an empty one.
  */
 template <typename CHAR_T>
-CHAR_T* qp_first_append(CHAR_T* str, size_t &len, size_t &capacity, const CHAR_T* new_str)
+inline CHAR_T* qp_first_append(CHAR_T* str, size_t &len, size_t &capacity, const CHAR_T* new_str)
 {
     size_t new_len = qp_len(new_str);
     if (new_len > capacity) {
@@ -104,7 +104,7 @@ CHAR_T* qp_first_append(CHAR_T* str, size_t &len, size_t &capacity, const CHAR_T
  * Appends a cstring to an existing one.
  */
 template <typename CHAR_T>
-CHAR_T* qp_append(CHAR_T *str, size_t &len, size_t &capacity, const CHAR_T* new_str)
+inline CHAR_T* qp_append(CHAR_T *str, size_t &len, size_t &capacity, const CHAR_T* new_str)
 {
     size_t new_len = qp_len(new_str);
     if (len + new_len > capacity) {
@@ -127,7 +127,7 @@ CHAR_T* qp_append(CHAR_T *str, size_t &len, size_t &capacity, const CHAR_T* new_
  * Concatenates two cstrings into a new one.
  */
 template <typename CHAR_T>
-CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2) {
+inline CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2) {
     size_t len1 = qp_len(str1);
     size_t len2 = qp_len(str2);
     CHAR_T *str = new CHAR_T[len1+len2+1];
@@ -141,7 +141,7 @@ CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2) {
  * Concatenates three cstrings into a new one.
  */
 template <typename CHAR_T>
-CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2, const CHAR_T *str3) {
+inline CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2, const CHAR_T *str3) {
     size_t len1 = qp_len(str1);
     size_t len2 = qp_len(str2);
     size_t len3 = qp_len(str3);
@@ -157,7 +157,7 @@ CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2, const CHAR_T *str3) {
  * Concatenates four cstrings into a new one.
  */
 template <typename CHAR_T>
-CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2, const CHAR_T *str3, const CHAR_T *str4) {
+inline CHAR_T* qp_concat(const CHAR_T *str1, const CHAR_T *str2, const CHAR_T *str3, const CHAR_T *str4) {
     size_t len1 = qp_len(str1);
     size_t len2 = qp_len(str2);
     size_t len3 = qp_len(str3);

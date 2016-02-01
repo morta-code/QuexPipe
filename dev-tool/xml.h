@@ -1,5 +1,5 @@
 #pragma once
-#include "charfuncs.h"
+#include <quexpipe/charfuncs.h>
 
 //template <typename CHAR_T>
 //inline CHAR_T* qp_xml(const CHAR_T* tagname)

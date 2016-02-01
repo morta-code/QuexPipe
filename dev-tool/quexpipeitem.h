@@ -24,15 +24,16 @@
 #define QUEX_TYPE_TOKEN_ID int
 #endif
 
+
+/**************************************************************
+ *   Mandatory (public) functions for the dynamic library
+ **************************************************************/
+
 #ifdef __cplusplus
 #define CFUNC extern "C"
 #else
 #define CFUNC
 #endif
-
-/**************************************************************
- *   Mandatory (public) functions for the dynamic library
- **************************************************************/
 
 /**
  *
@@ -66,6 +67,4 @@ charsize()
 {
     return sizeof(QUEX_TYPE_CHARACTER);
 }
-
-
 
