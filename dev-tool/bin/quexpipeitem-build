@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# if [ -n "$QUEXPIPE_INCLUDE_PATH" ]; then
+#   ;;
+# else
+#   QUEXPIPE_INCLUDE_PATH=quexpipe
+# fi
+
+# Usage info
+show_help() {
+echo "Plugin compiler helper for QuexPipe.
+Usage: ${0##*/} lexer_name [OPTIONS]
+Options are:
+    -h          Display this help and exit.
+    -b BUFFER_HANDLING
+                The buffer handling method (copy, fill, point). Default is the copy.
+                Experimental use only!
+    -B BUFFER_SIZE
+                Lexer module buffer size. If the maximum lexeme size is known,
+                it's recommended to set at least double of them.
+    -p TOKEN_POLICY
+                The token policy method (single, queue). Default is the single.
+                Use queue if accumulator used in Quex space, otherwise keep single.
+    -g          Generates source code but doesn't compile.
+    -s          Keeps the source code after compilation.
+    -O OPT      The level of code optimalization by g++ (0, 1, 2, 3, fast, s).
+
+© Móréh Tamás, PPKE-ITK 2014-2016. Contact: morta@digitus.itk.ppke.hu
+ABSOLUTELY NO WARRANTY"
+}
+
+if [[ $# == 0 ]]; then
+    show_help
+    exit 1
+fi
+
+handling_arr=(copy fill point)
+policy_arr=(single queue)
+optim_arr=(0 1 2 3 fast s)
+
+FILENAME=$1
+NAME=`echo $1 | sed -r "s/.qx//"`
+BUFFER_SIZE=4096  # todo ne legyen default
+BUFFER_HANDLING="copy"
+TOKEN_POLICY="single"
+CHAR_TYPE="wchar_t"  # todo
+
+COMPILE=1
+DELETE_SOURCE=1
+OPTIM_LEVEL="3"
+CXX=g++
+
+OPTIND=2
+while getopts ":hl:b:p:gsO:B:" opt; do
+    case "$opt" in
+        h)
+            show_help
+            exit 0
+            ;;
+        # l )
+        #     NAME=$OPTARG
+        #     ;;
+        b)
+            BUFFER_HANDLING=$OPTARG
+            conts=0
+            for h in handling_arr; do
+                if [[ $h == $BUFFER_HANDLING ]]; then
+                    conts=1
+                    break
+                fi
+            done
+            if [[ $conts == 0 ]]; then
+                show_help
+                exit 1
+            fi
+            ;;
+        p)
+            TOKEN_POLICY=$OPTARG
+            conts=0
+            for h in policy_arr; do
+                if [[ $h == $TOKEN_POLICY ]]; then
+                    conts=1
+                    break
+                fi
+            done
+            if [[ $conts == 0 ]]; then
+                show_help
+                exit 1
+            fi
+            ;;
+        g)  
+            COMPILE=0
+            ;;
+        s)
+            DELETE_SOURCE=0
+            ;;
+        O)
+            OPTIM_LEVEL=$OPTARG
+            conts=0
+            for h in optim_arr; do
+                if [[ $h == $OPTIM_LEVEL ]]; then
+                    conts=1
+                    break
+                fi
+            done
+            if [[ $conts == 0 ]]; then
+                show_help
+                exit 1
+            fi
+            ;;
+        B)
+            BUFFER_SIZE=$OPTARG
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+#########################
+# Quex the grammar file
+#########################
+
+echo -e "\e[36mCompiling quex grammar from $FILENAME to $NAME...\e[39m"
+quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE --tmmbu
+
+
+#########################
+# Create the source file
+#########################
+
+echo -e "\e[36mCreating C++ source file...\e[39m"
+CXXFLAGS="-O$OPTIM_LEVEL -std=c++11 -Wall -W -fPIC -shared"
+HEADER="implementation_$BUFFER_HANDLING""_""$TOKEN_POLICY.h"
+
+echo "
+/**************************************************************
+ *   Auto generated source file for Quex-generated lexer
+ *   Do not edit manually!
+ *
+ *   This file will be compiled to a .so file which is able to
+ *   load and use by the QuexPipe lexer as a plugin.
+ **************************************************************/
+
+#define QUEX_SETTING_BUFFER_SIZE $BUFFER_SIZE
+
+#include \"$NAME\"
+#include <quexpipe/$HEADER>
+" > $NAME.cpp
+
+if [ "$COMPILE" -eq 0 ]; then
+    exit 0
+fi
+
+#########################
+# Compile
+#########################
+
+echo -e "\e[36mCompiling the lexer...\e[39m"
+$CXX $CXXFLAGS -o $NAME.so $NAME.cpp
+
+#########################
+# Delete source after compiling
+#########################
+
+if [ "$DELETE_SOURCE" -eq 1 ]; then
+    echo -e "\e[36mDeleting the generated files...\e[39m"
+    rm $NAME.cpp
+fi
