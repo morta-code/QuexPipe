@@ -77,12 +77,6 @@ void run_char(lexer_manager* last_lexer, std::ostream &output) {
 }
 
 
-//void func(std::vector<char*> libs, char* input_filename = 0, char* output_filename = 0)
-//{
-
-//}
-
-
 
 //------------------------- THE MAIN FUNCTION -------------------------
 int main(int argc, char *argv[])
