@@ -6,6 +6,8 @@
  *   The hidden part of the dynamic library
  **************************************************************/
 
+//#define ACCUMULATOR_IN_IMPLEMENTATION
+
 /**
  * Encapsulates the datas and the functions of algorythm
  * (namespace used as a singleton object)
@@ -34,10 +36,15 @@ QUEX_TYPE_TOKEN         token_bank[2];
 QUEX_TYPE_TOKEN*        prev_token;
 QUEX_TYPE_CHARACTER*    prev_lexeme_start_p = 0;
 
+//QUEX_TYPE_STRING read; // todo globál, chunk ennek a mutatóit jelöli ki
+#ifdef ACCUMULATOR_IN_IMPLEMENTATION
+QUEX_TYPE_STRING        accumulator;
+#endif
+
 
 inline void initialize(unsigned int &buf_size)
 {
-    buffer_size = buf_size;
+    buffer_size = buf_size;  // todo: remove buffer_size
     source_terminated = false;
     ok = true;
     lexer = new QUEX_TYPE_ANALYZER((QUEX_TYPE_CHARACTER*)0, 0);
@@ -59,7 +66,7 @@ inline void finalize()
 
 inline void fill()
 {
-    // TODO: sok memcpy
+
     // lexer->buffer_fill_region_prepare();
     QUEX_TYPE_STRING input_buffer;
     input_buffer.reserve(buffer_size);
@@ -80,12 +87,27 @@ inline void fill()
 
     chunk.begin = rx_buffer;
     chunk.end = rx_buffer + rx_size;
+    // todo: törölni:
+    if (chunk.begin != chunk.end)
+        chunk.begin = (QUEX_TYPE_CHARACTER*)lexer->buffer_fill_region_append(chunk.begin, chunk.end);
+    // Ez jó
+    // ki kéne próbálni, hogy string helyett közvetlen a mem.területre másolni, amíg nem telik be.
+    // Mindenesetre a puffert a belső amúgy is meghatározza, nem kell egy továbbin dolgozni.
 
-    chunk.begin = (QUEX_TYPE_CHARACTER*)lexer->buffer_fill_region_append(chunk.begin, chunk.end);
+//    if (chunk.begin != chunk.end) {
+//        chunk.begin = (QUEX_TYPE_CHARACTER*)lexer->buffer_fill_region_append(chunk.begin, chunk.end);
+//        // Todo: létetés, ha tele lenne.
+//    }
+//    while (chunk.begin == chunk.end && !source_terminated) {
+//        read = read_from_source(source_terminated, ok);
+//        chunk.begin = &read[0];
+//        chunk.end = &read[0]+read.size();
+//        chunk.begin = (QUEX_TYPE_CHARACTER*)lexer->buffer_fill_region_append(chunk.begin, chunk.end);
+//    }
 }
 
 
-inline QUEX_TYPE_STRING process(bool &finished, bool &ok)
+inline QUEX_TYPE_STRING process(bool &finished, bool &)
 {
 
 /// Ismételd:
@@ -113,17 +135,43 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &ok)
 ///             ACCU += ELŐZŐ_TOKEN.text
 ///
 
-
-    // Arbitrary chunked buffer, single:
-    QUEX_TYPE_STRING accu;
-
+#ifdef ACCUMULATOR_IN_IMPLEMENTATION
+    while (true) {
+        QUEX_TYPE_TOKEN_ID token_id = QUEX_TKN_TERMINATION;
+        //prev_lexeme_start_p = lexer->buffer_lexeme_start_pointer_get();
+        prev_token = lexer->token_p_switch(prev_token);
+        token_id = lexer->receive();
+        if (token_id == QUEX_TKN_TERMINATION) {
+            if (!source_terminated) {
+                accumulator += prev_token->text;
+                chunk.begin = &accumulator[0];
+                chunk.end = chunk.begin + accumulator.size() - 1;
+                //lexer->buffer_input_pointer_set(prev_lexeme_start_p);
+                fill();
+            } else {
+                finished = true;
+                QUEX_TYPE_STRING res = accumulator + prev_token->text;
+                accumulator.clear();
+                return res;
+            }
+        } else {
+            if (prev_token->type_id() == QUEX_TKN_UNUSED) {
+                accumulator += prev_token->text;
+            } else {
+                QUEX_TYPE_STRING res = accumulator + prev_token->text;
+                accumulator.clear();
+                return res;
+            }
+        }
+    }
+#else
     while (true) {
         QUEX_TYPE_TOKEN_ID token_id = QUEX_TKN_TERMINATION;
         prev_lexeme_start_p = lexer->buffer_lexeme_start_pointer_get();
         prev_token = lexer->token_p_switch(prev_token);
         token_id = lexer->receive();
         if (token_id == QUEX_TKN_TERMINATION) {
-            if (source_terminated == false) {
+            if (!source_terminated) {
                 // TODO accumulator here
                 // Az UNUSEDeket töltsük vissza (vagy állítsuk vissza a pointert, ha lehet)
                 lexer->buffer_input_pointer_set(prev_lexeme_start_p);
@@ -132,7 +180,12 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &ok)
                 finished = true;
                 return prev_token->text;
             }
-        } else if (prev_token->type_id() != QUEX_TKN_TERMINATION &&
+        } else /*if (prev_token->type_id() != QUEX_TKN_TERMINATION)*/ {
+             return prev_token->text;
+        }
+
+
+        /* else if (prev_token->type_id() != QUEX_TKN_TERMINATION &&
                    prev_token->type_id() != QUEX_TKN_UNUSED) {
             return prev_token->text;
         } else if (prev_token->type_id() != QUEX_TKN_TERMINATION &&
@@ -140,8 +193,9 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &ok)
             // TODO accumulator here
             // Ha UNUSED jön, tegyük el. Ha Nem UNUSED jön, az eltetteket küldjük ki.
             accu += prev_token->text;
-        }
+        } */
     }
+#endif
 }
 
 }
