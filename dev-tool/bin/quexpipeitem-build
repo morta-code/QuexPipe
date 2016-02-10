@@ -24,6 +24,7 @@ Options are:
     -g          Generates source code but doesn't compile.
     -s          Keeps the source code after compilation.
     -O OPT      The level of code optimalization by g++ (0, 1, 2, 3, fast, s).
+    -R          Removes only all source files from qx generated and exit.
 
 © Móréh Tamás, PPKE-ITK 2014-2016. Contact: morta@digitus.itk.ppke.hu
 ABSOLUTELY NO WARRANTY"
@@ -34,13 +35,20 @@ if [[ $# == 0 ]]; then
     exit 1
 fi
 
+FILENAME=$1
+NAME=`echo $1 | sed -r "s/.qx//"`
+
+delete_sources() {
+    echo -e "\e[36mDeleting the generated files...\e[39m"
+    rm $NAME $NAME-configuration "$NAME""_shared.cpp" $NAME-token $NAME-token_ids
+}
+
+
 handling_arr=(copy fill point)
 policy_arr=(single queue)
 optim_arr=(0 1 2 3 fast s)
 
-FILENAME=$1
-NAME=`echo $1 | sed -r "s/.qx//"`
-BUFFER_SIZE=4096  # todo ne legyen default
+BUFFER_SIZE=65536
 BUFFER_HANDLING="copy"
 TOKEN_POLICY="single"
 CHAR_TYPE="wchar_t"  # todo
@@ -51,15 +59,16 @@ OPTIM_LEVEL="3"
 CXX=g++
 
 OPTIND=2
-while getopts ":hl:b:p:gsO:B:" opt; do
+while getopts ":hRb:p:gsO:B:" opt; do
     case "$opt" in
         h)
             show_help
             exit 0
             ;;
-        # l )
-        #     NAME=$OPTARG
-        #     ;;
+        R )
+            delete_sources
+            exit 0
+            ;;
         b)
             BUFFER_HANDLING=$OPTARG
             conts=0
@@ -127,24 +136,23 @@ quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE --tmmbu
 # Create the source file
 #########################
 
+mv $NAME.cpp "$NAME""_shared.cpp"
+
 echo -e "\e[36mCreating C++ source file...\e[39m"
-CXXFLAGS="-O$OPTIM_LEVEL -std=c++11 -Wall -W -fPIC -shared"
+CXXFLAGS="-O$OPTIM_LEVEL -std=c++11 -Wall -W -fPIC -shared -DQUEX_OPTION_ASSERTS_WARNING_MESSAGE_DISABLED -DQUEX_SETTING_BUFFER_SIZE=$BUFFER_SIZE"
 HEADER="implementation_$BUFFER_HANDLING""_""$TOKEN_POLICY.h"
 
-echo "
+echo -e "\n
 /**************************************************************
- *   Auto generated source file for Quex-generated lexer
+ *   Auto generated source part for Quex-generated lexer
  *   Do not edit manually!
  *
  *   This file will be compiled to a .so file which is able to
  *   load and use by the QuexPipe lexer as a plugin.
  **************************************************************/
 
-#define QUEX_SETTING_BUFFER_SIZE $BUFFER_SIZE
-
-#include \"$NAME\"
 #include <quexpipe/$HEADER>
-" > $NAME.cpp
+" >> "$NAME""_shared.cpp"
 
 if [ "$COMPILE" -eq 0 ]; then
     exit 0
@@ -162,6 +170,5 @@ $CXX $CXXFLAGS -o $NAME.so $NAME.cpp
 #########################
 
 if [ "$DELETE_SOURCE" -eq 1 ]; then
-    echo -e "\e[36mDeleting the generated files...\e[39m"
-    rm $NAME.cpp
+    delete_sources
 fi
