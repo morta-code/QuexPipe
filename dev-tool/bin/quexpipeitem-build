@@ -49,7 +49,7 @@ policy_arr=(single queue)
 optim_arr=(0 1 2 3 fast s)
 
 BUFFER_SIZE=65536
-BUFFER_HANDLING="copy"
+BUFFER_HANDLING="point"
 TOKEN_POLICY="single"
 CHAR_TYPE="wchar_t"  # todo
 
@@ -72,7 +72,7 @@ while getopts ":hRb:p:gsO:B:" opt; do
         b)
             BUFFER_HANDLING=$OPTARG
             conts=0
-            for h in handling_arr; do
+            for h in "${handling_arr[@]}"; do
                 if [[ $h == $BUFFER_HANDLING ]]; then
                     conts=1
                     break
@@ -86,7 +86,7 @@ while getopts ":hRb:p:gsO:B:" opt; do
         p)
             TOKEN_POLICY=$OPTARG
             conts=0
-            for h in policy_arr; do
+            for h in "${policy_arr[@]}"; do
                 if [[ $h == $TOKEN_POLICY ]]; then
                     conts=1
                     break
@@ -124,13 +124,25 @@ while getopts ":hRb:p:gsO:B:" opt; do
 done
 shift $((OPTIND-1))
 
+
+if [[ $TOKEN_POLICY == "queue" ]]; then
+    TOKEN_POLICY="$TOKEN_POLICY --token-queue-size 8 --token-queue-safety-border 2"
+else
+    TOKEN_POLICY="$TOKEN_POLICY --tmmbu"
+fi
+
 #########################
 # Quex the grammar file
 #########################
 
 echo -e "\e[36mCompiling quex grammar from $FILENAME to $NAME...\e[39m"
-quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE --tmmbu
+# todo: --tmmbu single módban!
+quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE
 
+if [[ $? != 0 ]]; then
+    show_help
+    exit 1
+fi
 
 #########################
 # Create the source file
