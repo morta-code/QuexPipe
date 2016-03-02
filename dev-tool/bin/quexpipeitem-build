@@ -13,11 +13,12 @@ Usage: ${0##*/} lexer_name [OPTIONS]
 Options are:
     -h          Display this help and exit.
     -b BUFFER_HANDLING
-                The buffer handling method (copy, fill, point). Default is the copy.
-                Experimental use only!
+                The buffer handling method (copy, fill, point).
+                Default is the point. Experimental use only!
     -B BUFFER_SIZE
                 Lexer module buffer size. If the maximum lexeme size is known,
                 it's recommended to set at least double of them.
+    -c TYPE     Buffer element type. Default: wchar_t. See the Quex documentation.
     -p TOKEN_POLICY
                 The token policy method (single, queue). Default is the single.
                 Use queue if accumulator used in Quex space, otherwise keep single.
@@ -25,6 +26,8 @@ Options are:
     -s          Keeps the source code after compilation.
     -O OPT      The level of code optimalization by g++ (0, 1, 2, 3, fast, s).
     -R          Removes only all source files from qx generated and exit.
+    -C COMPILER  Specifies the C++ compiler (in path). Default: g++.
+                 GNU g++, CLAG, Intel can be used. Don't use MSVC.
 
 © Móréh Tamás, PPKE-ITK 2014-2016. Contact: morta@digitus.itk.ppke.hu
 ABSOLUTELY NO WARRANTY"
@@ -44,14 +47,13 @@ delete_sources() {
 }
 
 
-handling_arr=(copy fill point)
+handling_arr=(point)  # todo (copy fill point) when implementation is ready
 policy_arr=(single queue)
 optim_arr=(0 1 2 3 fast s)
-
 BUFFER_SIZE=65536
 BUFFER_HANDLING="point"
 TOKEN_POLICY="single"
-CHAR_TYPE="wchar_t"  # todo
+CHAR_TYPE="wchar_t"
 
 COMPILE=1
 DELETE_SOURCE=1
@@ -59,7 +61,7 @@ OPTIM_LEVEL="3"
 CXX=g++
 
 OPTIND=2
-while getopts ":hRb:p:gsO:B:" opt; do
+while getopts ":hRb:p:gsO:B:C:" opt; do
     case "$opt" in
         h)
             show_help
@@ -97,6 +99,9 @@ while getopts ":hRb:p:gsO:B:" opt; do
                 exit 1
             fi
             ;;
+        c)
+            CHAR_TYPE=$OPTARG
+            ;;
         g)  
             COMPILE=0
             ;;
@@ -120,6 +125,9 @@ while getopts ":hRb:p:gsO:B:" opt; do
         B)
             BUFFER_SIZE=$OPTARG
             ;;
+        C)
+            CXX=$OPTARG
+            ;;
     esac
 done
 shift $((OPTIND-1))
@@ -136,10 +144,10 @@ fi
 #########################
 
 echo -e "\e[36mCompiling quex grammar from $FILENAME to $NAME...\e[39m"
-# todo: --tmmbu single módban!
 quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE
 
 if [[ $? != 0 ]]; then
+    echo -e "\e[91mERROR HAPPENED!\e[39m"
     show_help
     exit 1
 fi
@@ -176,6 +184,12 @@ fi
 
 echo -e "\e[36mCompiling the lexer...\e[39m"
 $CXX $CXXFLAGS -o $NAME.so $NAME.cpp
+
+if [[ $? != 0 ]]; then
+    echo -e "\e[91mERROR HAPPENED!\e[39m"
+    show_help
+    exit 1
+fi
 
 #########################
 # Delete source after compiling
