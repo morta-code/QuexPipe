@@ -59,6 +59,8 @@ BUFFER_HANDLING="point"
 TOKEN_POLICY="single"
 CHAR_TYPE="wchar_t"
 
+QUEX_FLAGS=""
+
 COMPILE=1
 DELETE_SOURCE=1
 OPTIM_LEVEL="3"
@@ -136,19 +138,19 @@ while getopts ":hRb:p:gsO:B:C:" opt; do
 done
 shift $((OPTIND-1))
 
-
 if [[ $TOKEN_POLICY == "queue" ]]; then
-    TOKEN_POLICY="$TOKEN_POLICY --token-queue-size 8 --token-queue-safety-border 2"
+    QUEX_FLAGS="$QUEX_FLAGS --token-policy $TOKEN_POLICY --token-queue-size 8 --token-queue-safety-border 2"
 else
-    TOKEN_POLICY="$TOKEN_POLICY --tmmbu"
+    QUEX_FLAGS="$QUEX_FLAGS --token-policy $TOKEN_POLICY --tmmbu"
 fi
+QUEX_FLAGS="$QUEX_FLAGS --bet $CHAR_TYPE"
 
 #########################
 # Quex the grammar file
 #########################
 
 echo -e "\e[36mCompiling quex grammar from $FILENAME to $NAME...\e[39m"
-quex -i $FILENAME -o $NAME --token-policy $TOKEN_POLICY --bet $CHAR_TYPE
+quex -i $FILENAME -o $NAME $QUEX_FLAGS
 
 if [[ $? != 0 ]]; then
     echo -e "\e[91mERROR HAPPENED!\e[39m"
@@ -163,7 +165,9 @@ fi
 mv $NAME.cpp "$NAME""_shared.cpp"
 
 echo -e "\e[36mCreating C++ source file...\e[39m"
-CXXFLAGS="-O$OPTIM_LEVEL -std=c++11 -Wall -W -fPIC -shared -DQUEX_OPTION_ASSERTS_WARNING_MESSAGE_DISABLED -DQUEX_SETTING_BUFFER_SIZE=$BUFFER_SIZE"
+INCLUDES="-I. -I$QUEX_PATH"
+DEFINITIONS="-DQUEX_OPTION_ASSERTS_WARNING_MESSAGE_DISABLED -DQUEX_SETTING_BUFFER_SIZE=$BUFFER_SIZE"
+CXXFLAGS="$INCLUDES -O$OPTIM_LEVEL -std=c++11 -Wall -W -fPIC -shared $DEFINITIONS"
 HEADER="implementation_$BUFFER_HANDLING""_""$TOKEN_POLICY.h"
 
 echo -e "\n
@@ -187,7 +191,7 @@ fi
 #########################
 
 echo -e "\e[36mCompiling the lexer...\e[39m"
-$CXX $CXXFLAGS -o $NAME.so $NAME.cpp
+$CXX "$NAME""_shared.cpp" -o $NAME.so $CXXFLAGS
 
 if [[ $? != 0 ]]; then
     echo -e "\e[91mERROR HAPPENED!\e[39m"
