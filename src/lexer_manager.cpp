@@ -49,6 +49,11 @@ void lexer_manager::load_lib(char *name)
     // load function pointers from the loaded library.
     char_size = ((uint8_t (*)())dlsym(libhandler, "charsize"))();
     buffer_size = ((uint32_t (*)())dlsym(libhandler, "buffer_size"))();
+    api_version = ((int (*)())dlsym(libhandler, "api_version"))();
+    if (api_version != CURRENT_API_VERSION) {
+        std::wcerr << L"The given library is invalid. No matching API version." << std::endl;
+        exit(ERROR_LIB_IS_INVALID);
+    }
     initialize = (void (*)())dlsym(libhandler, "initialize");
     set_source_func8 = (void (*)(std::string (*)(bool&, bool&)))dlsym(libhandler, "set_source_func");
     set_source_func32 = (void (*)(std::wstring (*)(bool&, bool&)))dlsym(libhandler, "set_source_func");

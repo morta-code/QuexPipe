@@ -6,8 +6,7 @@
  **************************************************************/
 
 
-// TODO: remove, only for testing
-// TODO: C esetében nem wchar_t De a főprogram?
+#define API_VERSION 0x010000
 #ifndef QUEX_SETTING_BUFFER_SIZE
 #define QUEX_SETTING_BUFFER_SIZE 65536
 #endif
@@ -79,4 +78,14 @@ CFUNC unsigned int
 buffer_size()
 {
     return (unsigned int)QUEX_SETTING_BUFFER_SIZE;
+}
+
+
+/**
+ * Returns the size of current lexer's buffer.
+ */
+CFUNC int
+api_version()
+{
+    return (int)API_VERSION;
 }
