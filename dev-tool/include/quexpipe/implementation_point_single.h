@@ -77,13 +77,13 @@ inline void fill()
     size_t qx_size = input_buffer.size();
     if (QUEX_SETTING_BUFFER_SIZE < qx_size) {
         qx_size = QUEX_SETTING_BUFFER_SIZE;
-        fill_back += input_buffer.substr(qx_size - 1);
+        fill_back += input_buffer.substr(qx_size);
         input_buffer.resize(qx_size);
     }
     // Copies data into the buffer and calls the lexer.
     memcpy(QX_BUFFER + 1, input_buffer.c_str(),
            sizeof(QUEX_TYPE_CHARACTER)*(qx_size+1));
-    lexer->reset_buffer(QX_BUFFER, qx_size+1, QX_BUFFER+qx_size);
+    lexer->reset_buffer(QX_BUFFER, qx_size+2, QX_BUFFER+qx_size+1);
     input_buffer.clear();
 }
 
