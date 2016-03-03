@@ -7,13 +7,14 @@
 #include <locale>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "lexer_manager.h"
 
 const uint8_t WCHAR_SIZE = sizeof(wchar_t);
 const uint8_t CHAR_SIZE = sizeof(char);
 
-std::streamsize stdin_chunk_size = 100;  // TODO: paraméterezhetőség
+std::streamsize input_chunk_size = 1024;
 std::wistream *winput = &std::wcin;
 std::istream *input = &std::cin;
 std::wostream *woutput = &std::wcout;
@@ -24,10 +25,10 @@ template <typename CHAR_T>
 inline std::basic_string<CHAR_T> read_string(bool& finished, bool& ok, std::basic_istream<CHAR_T> &input) {
     std::basic_string<CHAR_T> buffer;
     if (input) {
-        buffer.resize(stdin_chunk_size);
-        input.read(&buffer[0], stdin_chunk_size);
+        buffer.resize(input_chunk_size);
+        input.read(&buffer[0], input_chunk_size);
         std::streamsize read = input.gcount();
-        if (input.gcount() < stdin_chunk_size) {
+        if (input.gcount() < input_chunk_size) {
             buffer.resize(read);
             finished = true;
         } else {
@@ -57,11 +58,9 @@ std::string read_from_input(bool& finished, bool& ok)
 void run_wide(lexer_manager* last_lexer, std::wostream &output) {
     bool finished = false;
     bool ok = true;
-    while (!finished) {
-        std::wstring read = last_lexer->receive32(finished, ok);
-        output << read;
-    }
-    output << std::endl;
+    do {
+        output << last_lexer->receive32(finished, ok);
+    } while (!finished);
     output.flush();
 }
 
@@ -69,10 +68,9 @@ void run_wide(lexer_manager* last_lexer, std::wostream &output) {
 void run_char(lexer_manager* last_lexer, std::ostream &output) {
     bool finished = false;
     bool ok = true;
-    while (!finished) {
+    do {
         output << last_lexer->receive8(finished, ok);
-    }
-    output << std::endl;
+    } while (!finished);
     output.flush();
 }
 
@@ -81,15 +79,14 @@ void run_char(lexer_manager* last_lexer, std::ostream &output) {
 //------------------------- THE MAIN FUNCTION -------------------------
 int main(int argc, char *argv[])
 {
-
     /// -i input
     /// -o output into a new file (or overwrite it) (like >)
     /// -a append into an existing file (or create it) (like >>)
     /// -c encoding
 
-    // TODO: Ne kelljen, hanem legyen rendszerkódolás.
-    // setlocale(LC_ALL, "hu_HU.utf8");
-    //setlocale(LC_ALL, "C.UTF-8");
+    // TODO: Use Iconv/ICU?
+    setlocale(LC_ALL, "C.UTF-8");
+    winput->imbue(std::locale("C.UTF-8"));
 
     if (argc <= 1) {
         std::wcerr << "No libraries given." << std::endl;
@@ -109,7 +106,7 @@ int main(int argc, char *argv[])
     managers.push_back(new lexer_manager(libraries[0]));
 
 
-    //---------------------- DECIDE THE CHAR TYPE ----------------------
+    //--------------- DECIDE THE CHAR TYPE AND INPUT CHUNK ---------------
     if (managers[0]->char_size == CHAR_SIZE) {
         managers[0]->set_source_func8(read_from_input);
     }
@@ -120,6 +117,7 @@ int main(int argc, char *argv[])
         std::wcerr << "No input function implemented for the given character size." << std::endl;
         return ERROR_LIB_CHARSIZE_INVALID;
     }
+    input_chunk_size = (managers[0]->buffer_size) / 4;
 
 
     //-------------------- INITIALIZE OTHER PLUGINS --------------------
@@ -129,14 +127,20 @@ int main(int argc, char *argv[])
 
 
     //------------------------ RUN AFTER INIT ------------------------
-    // TODO ebbe az if-be helyezhető el a bemenet és a kimenet specifikálása, fájl esetén a kódolás is.
+    auto start_time = std::chrono::high_resolution_clock::now();
     if (managers[0]->char_size == CHAR_SIZE) {
         run_char(managers.back(), *output);
     }
     else if (managers[0]->char_size == WCHAR_SIZE) {
-        // std::wcin.imbue(std::locale("C.UTF-8")); TODO: kell?
         run_wide(managers.back(), *woutput);
     }
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    //----------------------- TIME MEASUREMENT -----------------------
+    std::wcerr << std::endl << L"Analysis is finished in "
+               << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()
+               << L" ms."
+               << std::endl;
 
 
     //------------------------ DELETE AFTER RUN ------------------------
