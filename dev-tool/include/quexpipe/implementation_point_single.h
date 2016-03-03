@@ -35,7 +35,7 @@ QUEX_TYPE_STRING     input_buffer;                             ///< Builds up th
  * @brief Initializes the library.
  * Creates the lexer and initializes token_bank.
  */
-inline void initialize(unsigned int &)
+inline void initialize()
 {
     source_terminated = false;
     ok = true;
@@ -164,9 +164,9 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &)
 
 
 CFUNC void
-initialize(unsigned int buffer_size)
+initialize()
 {
-    quexpipeitem::initialize(buffer_size);
+    quexpipeitem::initialize();
 }
 
 

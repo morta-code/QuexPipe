@@ -8,6 +8,9 @@
 
 // TODO: remove, only for testing
 // TODO: C esetében nem wchar_t De a főprogram?
+#ifndef QUEX_SETTING_BUFFER_SIZE
+#define QUEX_SETTING_BUFFER_SIZE 65536
+#endif
 #ifndef QUEX_TYPE_CHARACTER
 #define QUEX_TYPE_CHARACTER wchar_t
 #endif
@@ -38,7 +41,7 @@
 /**
  *
  */
-CFUNC void initialize(unsigned int buffer_size);
+CFUNC void initialize();
 
 
 /**
@@ -65,6 +68,15 @@ CFUNC void finalize();
 CFUNC unsigned char
 charsize()
 {
-    return sizeof(QUEX_TYPE_CHARACTER);
+    return (unsigned char)sizeof(QUEX_TYPE_CHARACTER);
 }
 
+
+/**
+ * Returns the size of current lexer's buffer.
+ */
+CFUNC unsigned int
+buffer_size()
+{
+    return (unsigned int)QUEX_SETTING_BUFFER_SIZE;
+}

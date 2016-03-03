@@ -34,7 +34,7 @@ QUEX_TYPE_TOKEN*     tokens_iterator = 0;                      ///< Pointer to t
  * @brief Initializes the library.
  * Creates the lexer.
  */
-inline void initialize(unsigned int &)
+inline void initialize()
 {
     source_terminated = false;
     ok = true;
@@ -137,9 +137,9 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &)
 
 
 CFUNC void
-initialize(unsigned int buffer_size)
+initialize()
 {
-    quexpipeitem::initialize(buffer_size);
+    quexpipeitem::initialize();
 }
 
 

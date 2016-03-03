@@ -17,8 +17,9 @@ public:
 
 
     uint8_t char_size;                                          ///< The size of character bytes.
+    uint32_t buffer_size;
     void load_lib(char* lib_name);
-    void (*initialize)(size_t);
+    void (*initialize)();
     void (*set_source_func8)(std::string (*)(bool&, bool&));
     void (*set_source_func32)(std::wstring (*)(bool&, bool&));
     std::string (*receive8)(bool&, bool&);
