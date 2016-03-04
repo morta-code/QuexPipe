@@ -31,7 +31,7 @@
 
 # Usage info
 show_help() {
-echo "Plugin compiler helper for QuexPipe.
+echo "Plugin compiler helper for QuexPipe. Version: 1.0.0
 Usage: ${0##*/} lexer_name [OPTIONS]
 Options are:
     -h          Display this help and exit.

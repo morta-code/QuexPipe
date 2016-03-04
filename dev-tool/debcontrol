@@ -1,0 +1,36 @@
+### Commented entries have reasonable defaults.
+### Uncomment to edit them.
+# Source: <source package name; defaults to package name>
+Section: misc
+Priority: extra
+Homepage: https://github.com/morta-code/QuexPipe
+# Standards-Version: 1.0.0
+
+Package: quexpipe-dev-tool
+Version: 1.0.0-1
+Maintainer: MTA-PPKE-NLPG <morta@digitus.itk.ppke.hu>
+# Pre-Depends: <comma-separated list of packages>
+Depends: libc6, libgcc1, libstdc++6
+# Recommends: <comma-separated list of packages>
+# Provides: <comma-separated list of packages>
+# Replaces: <comma-separated list of packages>
+Architecture: all
+Copyright: ../LICENSE
+Changelog: CHANGELOG
+# Readme: <README.Debian file; defaults to a generic one>
+# Extra-Files: <comma-separated list of additional files for the doc directory>
+# Files: <pair of space-separated paths; First is file to include, second is destination>
+Files: bin/quexpipe-plugin-build /usr/
+ include/quexpipe/charfuncs.h /usr/
+ include/quexpipe/implementation_copy_queue.h /usr/
+ include/quexpipe/implementation_copy_single.h /usr/
+ include/quexpipe/implementation_point_queue.h /usr/
+ include/quexpipe/implementation_point_single.h /usr/
+ include/quexpipe/quexpipeitem.h /usr/
+ include/quexpipe/xml.h /usr/
+
+#  <more pairs, if there's more than one file to include. Notice the starting space>
+Description: Lexical analyzer for Quex lexers - plugin development files
+ Application for tokenizing text content with multiple and switchable Quex lexers serially like pipelining them.
+ .
+ This package contains the header files for plugin development and a plugin compiler script: quexpipe-plugin-build.

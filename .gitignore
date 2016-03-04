@@ -31,3 +31,6 @@ ui_*.h
 #QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+# Compiled packages
+bin/

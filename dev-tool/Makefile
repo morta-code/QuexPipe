@@ -21,13 +21,8 @@
 #     MÓRÉH Tamás - Software architecture design and implementation
 #*****************************************************************************
 
-####### Compiler, tools and options
+####### Tools and options
 
-CXX           = g++
-DEFINES       = 
-INCPATH       = 
-LIBRARIES	  = -ldl
-CXXFLAGS      = -pipe -O3 -std=c++0x -Wall -W -fPIC $(DEFINES) $(INCPATH) $(LIBRARIES)
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
 MKDIR         = mkdir -p
@@ -42,47 +37,19 @@ SYMLINK       = ln -f -s
 DEL_DIR       = rmdir
 MOVE          = mv -f
 
-all: quexpipe
+deb:
+	equivs-build -f debcontrol
 
-quexpipe: lexer_manager.cpp main.cpp
-	@$(CXX) lexer_manager.cpp main.cpp -o quexpipe $(CXXFLAGS)
-
-bin32: lexer_manager.cpp main.cpp
-	@$(MKDIR) bin32
-	@$(CXX) -m32 lexer_manager.cpp main.cpp -o bin32/quexpipe $(CXXFLAGS)
-
-bin64: lexer_manager.cpp main.cpp
-	@$(MKDIR) bin64
-	@$(CXX) -m64 lexer_manager.cpp main.cpp -o bin64/quexpipe $(CXXFLAGS)
-
-deball: deb64 deb32
-
-deb32: bin32
-	$(COPY) debcontrol bin32/debcontrol
-	cd bin32; \
-	sed -i "s=amd64=i386=" debcontrol; \
-	sed -i "s=CHANGELOG=../CHANGELOG=" debcontrol; \
-	sed -i "s=LICENSE=../../LICENSE=" debcontrol; \
-	equivs-build -f -a i386 debcontrol
-
-deb64: bin64
-	$(COPY) debcontrol bin64/debcontrol
-	cd bin64; \
-	sed -i "s=CHANGELOG=../CHANGELOG=" debcontrol; \
-	sed -i "s=LICENSE=../../LICENSE=" debcontrol; \
-	equivs-build -f -a amd64 debcontrol
-
-build_to_bin: deball
-	@$(COPY) bin32/*.deb ../bin/
-	@$(COPY) bin64/*.deb ../bin/
+build_to_bin: deb
+	@$(COPY) *.deb ../bin/
 
 clean:
-	@$(DEL_FILE) quexpipe
-	@if [ -d bin32 ]; then $(DEL_FILE) bin32/*; $(DEL_DIR) bin32; fi
-	@if [ -d bin64 ]; then $(DEL_FILE) bin64/*; $(DEL_DIR) bin64; fi
+	@$(DEL_FILE) quexpipe-dev-tool_*
 
-install: quexpipe
-	@$(INSTALL_PROGRAM) quexpipe /usr/bin
+install:
+	@$(INSTALL_PROGRAM) bin/quexpipe-plugin-build /usr/bin
+	@$(COPY_DIR) include /usr
 
-uninstall: /usr/bin/quexpipe
-	@$(DEL_FILE) /usr/bin/quexpipe
+uninstall: /usr/bin/quexpipe-plugin-build
+	@$(DEL_FILE) /usr/bin/quexpipe-plugin-build
+	@rm -f -R /usr/include/quexpipe
