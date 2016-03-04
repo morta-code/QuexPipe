@@ -1,12 +1,39 @@
+/*******************************************************************************
+ * Copyright (c) 2016 MÓRÉH Tamás
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v3
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/
+ *
+ * This file is part of QuexPipe.
+ *
+ * QuexPipe is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * QuexPipe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * Contributors:
+ *     MÓRÉH Tamás - Software architecture design and implementation
+ ******************************************************************************/
+
+// WARNING: This file contains method they work not correctly.
+// It has no affect to the whole software.
+
 #pragma once
 
+#include <cstddef>
+#include <cstring>
 #include <quexpipe/quexpipeitem.h>
 
 /**************************************************************
- *   The hidden part of the dynamic library
+ *   The implementation part of the dynamic library
  **************************************************************/
 
-//#define ACCUMULATOR_IN_IMPLEMENTATION
 
 /**
  * Encapsulates the datas and the functions of algorythm
@@ -42,9 +69,9 @@ QUEX_TYPE_STRING        accumulator;
 #endif
 
 
-inline void initialize(unsigned int &buf_size)
+inline void initialize()
 {
-    buffer_size = buf_size;  // todo: remove buffer_size
+    buffer_size = QUEX_SETTING_BUFFER_SIZE;  // todo: remove buffer_size
     source_terminated = false;
     ok = true;
     lexer = new QUEX_TYPE_ANALYZER((QUEX_TYPE_CHARACTER*)0, 0);
@@ -207,9 +234,9 @@ inline QUEX_TYPE_STRING process(bool &finished, bool &)
 
 
 CFUNC void
-initialize(unsigned int buffer_size)
+initialize()
 {
-    quexpipeitem::initialize(buffer_size);
+    quexpipeitem::initialize();
 }
 
 

@@ -1,35 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2016 MÓRÉH Tamás
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser Public License v3
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/
+ *
+ * This file is part of QuexPipe.
+ *
+ * QuexPipe is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * QuexPipe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * Contributors:
+ *     MÓRÉH Tamás - Software architecture design and implementation
+ ******************************************************************************/
+
 #pragma once
 #include <quexpipe/charfuncs.h>
-
-//template <typename CHAR_T>
-//inline CHAR_T* qp_xml(const CHAR_T* tagname)
-//{
-//    std::basic_string<CHAR_T> str;
-//    str += (CHAR_T*)L"<";
-//    str += tagname;
-//    str += (CHAR_T*)L"/";
-//    str += (CHAR_T*)L">";
-//    CHAR_T* repr = new CHAR_T[str.size()+1];
-//    mempcpy(repr, str.data(), sizeof(CHAR_T)*(str.size()+1));
-//    return repr;
-//}
-
-//template <typename CHAR_T>
-//inline CHAR_T* qp_xml(const CHAR_T* tagname, const CHAR_T* content)
-//{
-//    std::basic_string<CHAR_T> str;
-//    str += (CHAR_T*)L"<";
-//    str += tagname;
-//    str += (CHAR_T*)L">";
-//    str += content;
-//    str += (CHAR_T*)L"<";
-//    str += (CHAR_T*)L"/";
-//    str += tagname;
-//    str += (CHAR_T*)L">";
-//    CHAR_T* repr = new CHAR_T[str.size()+1];
-//    mempcpy(repr, str.data(), sizeof(CHAR_T)*(str.size()+1));
-//    return repr;
-//}
 
 
 /**
