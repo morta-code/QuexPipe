@@ -15,7 +15,8 @@ The following packages are installed on all Linux distributions:
 
 ### Install:
 * On Debian-based systems (or using dpkg): Download the latest package from [here](http://pi.itk.ppke.hu/~morta/quexpipe/) and install it. Take care of the corresponding architecture (x86/amd64)!
-* Otherwise download the [master archive](archive/master.zip), unconpress it and use the Makefile:
+* Otherwise download the [master archive](https://github.com/morta-code/QuexPipe/archive/master.zip), unconpress it and use the Makefile:
+
   ```bash
   $ cd QuexPipe-master/src
   $ make
@@ -35,7 +36,7 @@ $ cat input.txt | quexpipe lexer1.so lexer2.so > output.txt
 ```
 * Transcoding file to UTF-8
 ```
-$ iconv -f ISO-8859-2 -t UTF-8 input.txt | quexpipe lexer.so
+$ iconv -f ISO-8859-2 -t UTF-8 input.txt | quexpipe lexer.so other_lexer.so
 ```
 # Dev-tool
 
@@ -45,7 +46,7 @@ It contains some core implementations and a lot of helper functions to make the 
 You must have Quex int the path and the `$QUEX_PATH` variable correclty set.
 ### Install:
 * On Debian-based systems (or using dpkg): Download the latest quexpipe-dev-tool package from [here](http://pi.itk.ppke.hu/~morta/quexpipe/) and install it.
-* Otherwise download the [master archive](archive/master.zip), unconpress it and use the Makefile:
+* Otherwise download the [master archive](https://github.com/morta-code/QuexPipe/archive/master.zip), unconpress it and use the Makefile:
 ```bash
 $ cd QuexPipe-master/dev-tool
 $ sudo make install
