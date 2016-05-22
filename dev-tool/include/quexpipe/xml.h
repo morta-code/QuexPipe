@@ -68,14 +68,47 @@ CHAR_T* qp_xml(const CHAR_T* tagname, const CHAR_T* content)
     }
     ret[ptr] = (CHAR_T)L'<';
     ++ptr;
+    ret[ptr] = (CHAR_T)L'/';
+    ++ptr;
     for (size_t i = 0;  tagname[i]; i++) {
         ret[ptr] = tagname[i];
         ++ptr;
     }
-    ret[ptr] = (CHAR_T)L'/';
-    ++ptr;
     ret[ptr] = (CHAR_T)L'>';
     ++ptr;
+    ret[ptr] = 0;
+    return ret;
+}
+
+/**
+ * Creates a closing and an opening XML tag.
+ * @example qp_xml_closeopen("title") returns "</title><title>"
+ */
+template <typename CHAR_T>
+inline CHAR_T* qp_xml_closeopen(const CHAR_T* tagname)
+{
+    size_t len = 2 * qp_len(tagname) + 6;
+    size_t ptr = 0;
+    CHAR_T* ret = new CHAR_T[len];
+    ret[ptr] = (CHAR_T)L'<';
+    ++ptr;
+    ret[ptr] = (CHAR_T)L'/';
+    ++ptr;
+    for (size_t i = 0; tagname[i]; i++) {
+        ret[ptr] = tagname[i];
+        ++ptr;
+    }
+    ret[ptr] = (CHAR_T)L'>';
+    ++ptr;
+    ret[ptr] = (CHAR_T)L'<';
+    ++ptr;
+    for (size_t i = 0; tagname[i]; i++) {
+        ret[ptr] = tagname[i];
+        ++ptr;
+    }
+    ret[ptr] = (CHAR_T)L'>';
+    ++ptr;
+
     ret[ptr] = 0;
     return ret;
 }

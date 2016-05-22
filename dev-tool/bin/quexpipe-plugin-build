@@ -61,10 +61,11 @@ if [ $# -eq 0 ]; then
     show_help
     exit 1
 fi
-if [ $1 == "--help" ]; then
+if [ $1 == "--help" -o $1 == "-h" ]; then
     show_help
     exit 0
 fi
+
 
 FILENAME=$1
 NAME=`echo $1 | sed -r "s/.qx//"`
