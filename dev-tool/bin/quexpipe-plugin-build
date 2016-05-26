@@ -92,7 +92,7 @@ OPTIM_LEVEL="3"
 CXX=g++
 
 OPTIND=2
-while getopts ":hRb:p:gsO:B:C:" opt; do
+while getopts ":hRb:p:gsO:B:C:c:" opt; do
     case "$opt" in
         h)
             show_help

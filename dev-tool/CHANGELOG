@@ -1,3 +1,10 @@
+quexpipe-dev-tool (1.0.2-1) stable; urgency=medium
+
+  * BUGFIX in quexpipe-plugin-build
+
+ -- MÓRÉH Tamás <morta@digitus.itk.ppke.hu>  Fri, 27 May 2016 00:44:32 +0100
+
+
 quexpipe-dev-tool (1.0.1-1) stable; urgency=medium
 
   * BUGFIX XML element with content in xml.h

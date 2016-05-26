@@ -7,7 +7,7 @@ Homepage: https://github.com/morta-code/QuexPipe
 # Standards-Version: 1.0.1
 
 Package: quexpipe-dev-tool
-Version: 1.0.1-1
+Version: 1.0.2-1
 Maintainer: MTA-PPKE-NLPG <morta@digitus.itk.ppke.hu>
 # Pre-Depends: <comma-separated list of packages>
 Depends: libc6, libgcc1, libstdc++6
