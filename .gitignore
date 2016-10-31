@@ -34,3 +34,6 @@ ui_*.h
 
 # Compiled packages
 bin/
+*.deb
+
+*.user
