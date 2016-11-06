@@ -5,6 +5,7 @@
 
 #include	"types.hpp"
 
+
 // --- class declaration: QuexPipeLibrary ------------------------------------------------------------------------------
 
 class QuexPipeLibrary
@@ -16,10 +17,14 @@ class QuexPipeLibrary
 public:
 							QuexPipeLibrary			();
 							~QuexPipeLibrary		();
-	
+	// TODO: hová?
 	LibraryStatus			load_external_library	(const String8& libpath);
 	std::vector<String8>	available_lexers		() const;
 	
+	FileStatus				input_file				(const String8& path);
+	FileStatus				output_file				(const String8& path, FileOutputMode mode);
+	LexerStatus				add_lexer				(const String8& lexer, const String8& from = "");
+	AnalysisResult			run						();
 };
 
 #endif // QUEXPIPELIBRARY_HPP
