@@ -31,14 +31,51 @@ typedef std::unordered_map<String8, ILexer* (*)()> LexerFactoryMap;
 
 
 
-// --- status codes ----------------------------------------------------------------------------------------------------
+// --- enumerators -----------------------------------------------------------------------------------------------------
 
-enum LibraryStatus
+enum LibraryStatus : char
 {
 	LibraryLoaded,
 	LibraryNotFound,
 	LibraryNotCompatible,
 	LibraryVersionIsNotCompatible
+};
+
+
+enum FileOutputMode : char
+{
+	NewFile	= 'n',
+	Append	= 'a'
+};
+
+
+enum FileStatus : char
+{
+	FileOpened,
+	FileNotExists,
+	FileWriteProtected
+};
+
+
+enum LexerStatus : char
+{
+	LexerOk,
+	LexerNotFound
+};
+
+
+enum AnalysisResult : char
+{
+	ResultOk,
+	Error
+};
+
+
+enum Encoding : char
+{
+	Utf8,
+	Utf16,
+	Utf32
 };
 
 #endif // TYPES_HPP
