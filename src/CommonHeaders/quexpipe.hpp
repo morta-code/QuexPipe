@@ -2,25 +2,8 @@
 #define QUEXPIPE_HPP
 
 // --- includes --------------------------------------------------------------------------------------------------------
-#include    <string>
 
-
-
-// --- type predeclarations --------------------------------------------------------------------------------------------
-
-class ITextInput;
-class ITextInputReader;
-class ILexer;
-class ILogger;
-
-
-
-// --- type definitions ------------------------------------------------------------------------------------------------
-
-typedef std::basic_string<char>		String8;
-typedef std::basic_string<char16_t>	String16;
-typedef std::basic_string<char32_t>	String32;
- 
+#include	"types.hpp"
 
  
 // --- class declaration: ITextInput -----------------------------------------------------------------------------------
@@ -56,7 +39,7 @@ public:
 	
 	// Methods:
 	virtual void		set_source			(const ITextInput* text_source) { source = text_source; }
-	virtual uint8_t		lexer_char_size		() = 0;
+	virtual uint8_t		lexer_char_size		() const = 0;
 };
 
 
@@ -99,12 +82,6 @@ public:
 
 // --- Reflection ------------------------------------------------------------------------------------------------------
 
-#include <unordered_map>
-typedef std::unordered_map<String8, ILexer* (*)()> LexerFactoryMap;
-
-// Not implemented in this version:
-//typedef std::unordered_map<String8, ILogger* (*)()> LoggerFactoryMap;
-//typedef std::unordered_map<String8, ITextInput* (*)()> OutputFactoryMap;
 
 extern "C" LexerFactoryMap* get_lexerfactorymap ()
 {
@@ -122,12 +99,12 @@ inline void register_lexer (const String8& name, ILexer* (*lexer_new)())
 
 // --- Other API functions ---------------------------------------------------------------------------------------------
 
-
 extern "C" {
 
 uint32_t api_version ();
 
 }
+
 #endif // QUEXPIPE_HPP
 
 
