@@ -24,10 +24,11 @@ extern "C" {
 /// \return Returns the id.
 ///
 int		quexpipe_new			()
+
 {
 	QuexPipeLibrary* qp = new QuexPipeLibrary;
 	long memaddr = reinterpret_cast<long> (qp);
-	int id = static_cast<int> (memaddr * 7717);
+	int id = static_cast<int> (memaddr * 7717); // quasi-random id.
 	while (quexpipes.find (id) != quexpipes.end ()) {
 		id++;
 	}
@@ -89,11 +90,15 @@ char*	qp_available_lexers		()
 
 ///
 /// \brief set_input_file specifies a file as the input source
+/// If this function will not be called, the standard input will be set by default.
 /// \param qp_id the identifier of the QuexPipe object
 /// \param path input file
-/// \return 0 if Ok; -1 if the id is wrong; 1 if the file doesn't exist
+/// If path is an empty string, the standard input will be (re)set.
+/// \return	0 if Ok;
+///			-1 if the id is wrong;
+///			1 if the file doesn't exist
 ///
-char	qp_set_input_file		(int qp_id, const char* path)
+char	qp_set_input_file		(int qp_id, const char* path = "")
 {
 	if (quexpipes.find (qp_id) == quexpipes.end ())
 		return -1;
@@ -105,12 +110,16 @@ char	qp_set_input_file		(int qp_id, const char* path)
 /// \brief set_output_file specifies a file as the output
 /// If the file doesn't exist it will be created, if it exists, however the new mode is set,
 /// it will be owerwritten.
+/// If this function will not be called, the standard output will be set by default.
 /// \param qp_id the identifier of the QuexPipe object
 /// \param path output file
+/// If path is an empty string, the standard input will be (re)set.
 /// \param mode	'n': new or overwrite; 'a': append
-/// \return 0 if Ok, file is opened; -1 if the id is wrong; 2 if the file is write protected
+/// \return	0 if Ok, file is opened;
+///			-1 if the id is wrong; 
+///			2 if the file is write protected
 ///
-char	qp_set_output_file		(int qp_id, const char* path, char mode = NewFile)
+char	qp_set_output_file		(int qp_id, const char* path = "", char mode = NewFile)
 {
 	if (quexpipes.find (qp_id) == quexpipes.end ())
 		return -1;
@@ -119,13 +128,16 @@ char	qp_set_output_file		(int qp_id, const char* path, char mode = NewFile)
 	return quexpipes[qp_id]->output_file (path, static_cast<FileOutputMode>(mode));
 }
 
-// TODO doc
+
 ///
-/// \brief qp_chain_lexer
-/// \param qp_id
-/// \param name
-/// \param module
-/// \return 
+/// \brief qp_chain_lexer appends a lexer to the analysis chain
+/// \param qp_id the identifier of the QuexPipe object
+/// \param name of the lexer
+/// \param module where the lexer is (a quasi-namespace)
+/// If module is not present and more lexers have the same name, the very last loaded one will be set.
+/// \return	0 if Ok, lexer is chained;
+///			-1 if the id is wrong;
+///			1 if the lexer is not found
 ///
 char	qp_chain_lexer			(int qp_id, const char* name, const char* module = "")
 {
@@ -136,9 +148,11 @@ char	qp_chain_lexer			(int qp_id, const char* name, const char* module = "")
 
 
 ///
-/// \brief qp_run
+/// \brief qp_run starts the analysis
 /// \param qp_id the identifier of the QuexPipe object
-/// \return 0 if Ok, 1 if something happened
+/// \return	0 if Ok, analysis completed successfully
+///			-1 if the id is wrong;
+///			1 if error happened
 ///
 char	qp_run					(int qp_id)
 {
@@ -146,8 +160,10 @@ char	qp_run					(int qp_id)
 		return -1;
 	return quexpipes[qp_id]->run ();
 }
-// TODO: logger?
 
-}
+// TODO: logger?
+// TODO: run from?
+
+} // extern "C"
 
 
