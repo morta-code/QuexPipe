@@ -9,17 +9,35 @@
 
 QuexPipeLibrary::QuexPipeLibrary ()
 {
-	
+	// TODO: Default initializations
 }
 
-LibraryStatus QuexPipeLibrary::load_external_library (const String8& libpath)
+QuexPipeLibrary::~QuexPipeLibrary()
+{
+	delete output;  // deletes also the sources (lexers) recursivelly
+	delete logger;	
+}
+
+FileStatus QuexPipeLibrary::input_file(const String8& path)
 {
 	
 }
 
-std::vector<String8> QuexPipeLibrary::available_lexers () const
+FileStatus QuexPipeLibrary::output_file(const String8& path, FileOutputMode mode)
 {
-	std::vector<String8> lexer_names;
-	// TODO implement;
-	//return lexer_names;
+	
 }
+
+LexerStatus QuexPipeLibrary::add_lexer(const String8& lexer, const String8& from)
+{
+	
+}
+
+AnalysisResult QuexPipeLibrary::run()
+{
+	
+}
+
+
+
+
