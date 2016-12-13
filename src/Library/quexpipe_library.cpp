@@ -1,6 +1,6 @@
 // --- includes --------------------------------------------------------------------------------------------------------
 
-#include	"quexpipe.hpp"
+#include	"quexpipe.hpp"  // TODO elég lenne csak azokat a típusokat, amik itt is előfordulnak.
 #include	"quexpipe_library.hpp"
 #include	"lexerloader.hpp"
 

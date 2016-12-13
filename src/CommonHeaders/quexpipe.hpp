@@ -101,9 +101,12 @@ inline void register_lexer (const String8& name, ILexer* (*lexer_new)())
 
 extern "C" {
 
-uint32_t api_version ();
+uint32_t	api_version ();
+const char*	library_name ();
 
 }
+
+// TODO divide headers
 
 #endif // QUEXPIPE_HPP
 

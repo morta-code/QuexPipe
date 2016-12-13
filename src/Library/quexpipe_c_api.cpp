@@ -60,6 +60,8 @@ char	quexpipe_delete			(int qp_id)
 ///			1 if the file is not found;
 ///			2 if the library is not comatible;
 ///			3 if the library version is not same as the current API version
+///			4 if the library is loaded but it is empty
+///			5 if the library could be loaded but it's name is reserved
 ///
 char	qp_load_external_lib	(const char* path)
 {

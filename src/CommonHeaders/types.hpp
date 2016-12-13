@@ -19,16 +19,19 @@ class ILogger;
 
 // --- type definitions ------------------------------------------------------------------------------------------------
 
-typedef std::basic_string<char>		String8;
-typedef std::basic_string<char16_t>	String16;
-typedef std::basic_string<char32_t>	String32;
+using String8			= std::basic_string<char>;
+using String16			= std::basic_string<char16_t>;
+using String32			= std::basic_string<char32_t>;
 
-typedef std::unordered_map<String8, ILexer* (*)()> LexerFactoryMap;
+
+
+using LexerFactoryMap	= std::unordered_map<String8, ILexer* (*)()>;
 
 // Not implemented in this version:
 //typedef std::unordered_map<String8, ILogger* (*)()> LoggerFactoryMap;
 //typedef std::unordered_map<String8, ITextInput* (*)()> OutputFactoryMap;
-
+template<typename T>
+using Vector			= std::vector<T>;
 
 
 // --- enumerators -----------------------------------------------------------------------------------------------------
@@ -38,7 +41,9 @@ enum LibraryStatus : char
 	LibraryLoaded,
 	LibraryNotFound,
 	LibraryNotCompatible,
-	LibraryVersionIsNotCompatible
+	LibraryVersionIsNotCompatible,
+	LibraryEmpty,
+	LibraryNameReserved
 };
 
 
