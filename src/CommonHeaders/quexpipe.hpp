@@ -65,6 +65,11 @@ public:
 class ILogger
 {
 public:
+						ILogger				();
+						ILogger				(const ILogger&)	= delete;
+						ILogger				(ILogger&&)			= delete;
+	ILogger&			operator =			(const ILogger&)	= delete;
+	ILogger&			operator =			(ILogger&&)			= delete;
 	virtual				~ILogger			() = 0;
 	
 	virtual void		log					(const String8&  msg) = 0;
