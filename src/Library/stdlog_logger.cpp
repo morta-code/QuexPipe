@@ -43,57 +43,57 @@ void NULLLogger::err (const String32&)
 // --- class declaration: STDLogLogger ---------------------------------------------------------------------------------
 
 
-STDLogLogger::STDLogLogger (std::ostream& out)
+STDLogger::STDLogger (std::ostream& out)
 {
 	dest = &out;
 }
 
-STDLogLogger::~STDLogLogger ()
+STDLogger::~STDLogger ()
 {
 	dest->flush ();
 }
 
-void STDLogLogger::log (const String8& msg)
+void STDLogger::log (const String8& msg)
 {
 	(*dest) << "LOG:\t" << msg << std::endl;
 }
 
-void STDLogLogger::log (const String16& msg)
+void STDLogger::log (const String16& msg)
 {
 	log (To_UTF8 (msg));
 }
 
-void STDLogLogger::log (const String32& msg)
+void STDLogger::log (const String32& msg)
 {
 	log (To_UTF8 (msg));
 }
 
-void STDLogLogger::warn (const String8& msg)
+void STDLogger::warn (const String8& msg)
 {
 	(*dest) << "WARN:\t" << msg << std::endl;
 }
 
-void STDLogLogger::warn (const String16& msg)
+void STDLogger::warn (const String16& msg)
 {
 	warn (To_UTF8 (msg));
 }
 
-void STDLogLogger::warn (const String32& msg)
+void STDLogger::warn (const String32& msg)
 {
 	warn (To_UTF8 (msg));
 }
 
-void STDLogLogger::err (const String8& msg)
+void STDLogger::err (const String8& msg)
 {
 	(*dest) << "ERROR:\t" << msg << std::endl;
 }
 
-void STDLogLogger::err (const String16& msg)
+void STDLogger::err (const String16& msg)
 {
 	err (To_UTF8 (msg));
 }
 
-void STDLogLogger::err (const String32& msg)
+void STDLogger::err (const String32& msg)
 {
 	err (To_UTF8 (msg));
 }

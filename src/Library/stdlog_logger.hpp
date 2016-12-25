@@ -10,11 +10,15 @@
 
 // --- class declaration: NULLLogger -----------------------------------------------------------------------------------
 
+///
+/// \brief The NULLLogger class
+/// This logger does nothing.
+/// 
 class NULLLogger : public ILogger
 {
+public:
 					NULLLogger		();
 					~NULLLogger		();
-public:
 	virtual void	log				(const String8& msg)	override;
 	virtual void	log				(const String16& msg)	override;
 	virtual void	log				(const String32& msg)	override;
@@ -30,12 +34,19 @@ public:
 
 // --- class declaration: STDLogLogger ---------------------------------------------------------------------------------
 
-class STDLogLogger : public ILogger
+///
+/// \brief The STDLogger class
+/// This logger prints all message to a specified std::ostream in the following format:
+/// LOG:	msg
+/// WARN:	msg
+/// ERR:	msg
+/// 
+class STDLogger : public ILogger
 {
 	std::ostream*	dest;
 public:
-					STDLogLogger	(std::ostream& out = std::clog);
-					~STDLogLogger	();
+					STDLogger		(std::ostream& out = std::clog);
+					~STDLogger		();
 	// ILogger interface
 	virtual void	log				(const String8& msg)	override;
 	virtual void	log				(const String16& msg)	override;
