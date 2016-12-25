@@ -2,6 +2,13 @@
 #include	"quexpipe.hpp"	// TODO kell itt minden?
 #include	"lexerloader.hpp"
 
+#if defined (QP_PLATFORM_UNIX) // All POSIX systems: Linux, BSD, macOS
+#include <dlfcn.h>
+#elif defined (QP_PLATFORM_WINDOWS)
+#include <windows.h>
+#endif
+
+
 static const String8 SEP = "::";
 static const String8 BIN = "-";
 
@@ -18,6 +25,17 @@ LexerLoader::LexerLoader ()
 	for (auto iter : *lexermap) {
 		loaded_lexers_by_name[iter.first] = iter.second;
 		loaded_lexers_disambigued_by_groups[BIN + SEP + iter.first] = iter.second;
+	}
+}
+
+LexerLoader::~LexerLoader()
+{
+	for (size_t i = 0; i < loaded_libs.size (); ++i) {
+		#if defined (QP_PLATFORM_UNIX) // All POSIX systems: Linux, BSD, macOS
+		dlclose (loaded_libs[i].handler);
+		#elif defined (QP_PLATFORM_WINDOWS)
+		// TODO win
+		#endif
 	}
 }
 
@@ -56,8 +74,7 @@ ILexer* LexerLoader::create_lexer (const String8& name, const String8& group)
 
 
 
-#if defined (QP_PLATFORM_UNIX)
-#include <dlfcn.h>
+#if defined (QP_PLATFORM_UNIX) // All POSIX systems: Linux, BSD, macOS
 
 LibraryStatus LexerLoader::load_library (const String8& path)
 {
@@ -85,10 +102,12 @@ LibraryStatus LexerLoader::load_library (const String8& path)
 	String8 libname(ld_library_name ());
 	auto found = std::find_if (loaded_libs.begin (), loaded_libs.end (), FindLoaded (libname));
 	if (found != loaded_libs.end ()) {
+		// A library is loaded with this name
 		if ((*found).handler != libID) {
 			dlclose (libID);
 			return LibraryNameReserved;
 		}
+		// The libraries are the same
 		return LibraryNameReserved;
 	}
 	
@@ -107,6 +126,12 @@ LibraryStatus LexerLoader::load_library (const String8& path)
 	return LibraryLoaded;
 }
 #elif defined (QP_PLATFORM_WINDOWS)
+// TODO win
 
+#else
+LibraryStatus LexerLoader::load_library (const String8& path)
+{
+	static_assert (false, "This function cannot be implemented on this platform.");
+}
 #endif
 

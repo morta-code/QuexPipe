@@ -33,6 +33,7 @@ class LexerLoader
 							LexerLoader			(const LexerLoader&) = delete;
 	LexerLoader&			operator=			(LexerLoader&) = delete;
 public:
+							~LexerLoader		();
 	static LexerLoader&		instance			();
 	
 	LibraryStatus			load_library		(const String8& path);
