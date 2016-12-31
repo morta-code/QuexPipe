@@ -13,6 +13,8 @@ if (UNIX)
 	set (CMAKE_CXX_FLAGS "-ldl")
 endif (UNIX)
 
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DQP_DEBUG")
+
 configure_file (
   "${PROJECT_SOURCE_DIR}/QuexPipeConfig.hpp.in"
   "${PROJECT_BINARY_DIR}/QuexPipeConfig.hpp"
