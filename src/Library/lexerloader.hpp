@@ -1,20 +1,40 @@
+/// lexerloader.hpp
+/// 
+/// This file is a part of the QuexPipe.
+/// Loads shared libraries platform independent and instantiates their lexer objects by name.
+/// © Móréh, Tamás 2016-2017
+/// 
+/// Private in Library module
+/// 
+
 #ifndef LEXERLOADER_HPP
 #define LEXERLOADER_HPP
 
 // --- includes --------------------------------------------------------------------------------------------------------
+
 #include	"QuexPipeConfig.hpp"
 #include	"types.hpp"
 
 
-// --- class declaration: LexerLoader ----------------------------------------------------------------------------------
+// --- predeclarations -------------------------------------------------------------------------------------------------
 
+#if defined (QP_PLATFORM_UNIX) // All POSIX systems: Linux, BSD, macOS
+using HandlePtr		= void*;
+#elif defined (QP_PLATFORM_WINDOWS)
+#include <windows.h>
+using HandlePtr		= HMODULE;
+#endif
+
+
+// --- class declaration: LexerLoader ----------------------------------------------------------------------------------
 
 class LexerLoader
 {
 	struct LibHandler
 	{
-		String8	name;
-		void*	handler;
+		String8			name;
+		HandlePtr		handler;
+		LexerFactoryMap	lexerMap;
 	};
 	class FindLoaded
 	{
@@ -26,8 +46,7 @@ class LexerLoader
 	};
 	
 
-	LexerFactoryMap			loaded_lexers_by_name;
-	LexerFactoryMap			loaded_lexers_disambigued_by_groups;
+	LexerFactoryMap			builtin_lexers;
 	Vector<LibHandler>		loaded_libs;
 							LexerLoader			();
 							LexerLoader			(const LexerLoader&) = delete;
@@ -37,8 +56,8 @@ public:
 	static LexerLoader&		instance			();
 	
 	LibraryStatus			load_library		(const String8& path);
-	std::vector<String8>&&	available_lexers	(); // TODO: libname::lexer - ez lesz a dizambiguacio
-	ILexer*					create_lexer		(const String8& name, const String8& group = "");
+	Vector<String8>&&		available_lexers	(); 
+	ILexer*					create_lexer		(const String8& name, const String8& module = "");
 };
 
 // TODO next ver: close_library
