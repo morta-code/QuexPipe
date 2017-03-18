@@ -27,7 +27,7 @@ using HandlePtr		= HMODULE;
 
 
 // --- class declaration: LexerLoader ----------------------------------------------------------------------------------
-
+// Loads the entire library, not only the lexer (later function)
 class LexerLoader
 {
 	struct LibHandler
@@ -36,6 +36,7 @@ class LexerLoader
 		HandlePtr		handler;
 		LexerFactoryMap	lexerMap;
 	};
+	
 	class FindLoaded
 	{
 		String8		name;
@@ -49,10 +50,10 @@ class LexerLoader
 	LexerFactoryMap			builtin_lexers;
 	Vector<LibHandler>		loaded_libs;
 							LexerLoader			();
-							LexerLoader			(const LexerLoader&) = delete;
-	LexerLoader&			operator=			(LexerLoader&) = delete;
 public:
 							~LexerLoader		();
+							LexerLoader			(const LexerLoader&) = delete;
+	LexerLoader&			operator=			(LexerLoader&) = delete;
 	static LexerLoader&		instance			();
 	
 	LibraryStatus			load_library		(const String8& path);
