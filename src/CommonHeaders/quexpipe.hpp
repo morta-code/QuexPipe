@@ -20,6 +20,7 @@ public:
 
 	virtual				~ITextInput			() = 0;
 	
+	virtual Status		get_status			() = 0;
 	// Outputs:
 	virtual Status		read_string8		(String8&  output, size_t& row, size_t& column) = 0;
 	virtual Status		read_string16		(String16& output, size_t& row, size_t& column) = 0;
