@@ -115,6 +115,8 @@ enum LexerStatus : char
 enum AnalysisResult : char
 {
 	ResultOk,
+	InputMissing,
+	OutputMissing,
 	Error
 };
 
