@@ -22,7 +22,7 @@ public:
 	
 	FileStatus				input_file				(const String8& path = "");
 	FileStatus				output_file				(const String8& path = "", FileOutputMode mode = NewFile);
-	LexerStatus				add_lexer				(const String8& lexer, const String8& from = "");
+	LexerStatus				add_lexer				(const String8& name, const String8& from = "");
 	AnalysisResult			run						();
 };
 

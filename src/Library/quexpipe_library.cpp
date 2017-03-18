@@ -3,39 +3,57 @@
 #include	"quexpipe.hpp"  // TODO elég lenne csak azokat a típusokat, amik itt is előfordulnak.
 #include	"quexpipe_library.hpp"
 #include	"lexerloader.hpp"
-
+#include	"stdlog_logger.hpp"
 
 // --- class definition: QuexPipeLibrary -------------------------------------------------------------------------------
 
-QuexPipeLibrary::QuexPipeLibrary ()
+QuexPipeLibrary::QuexPipeLibrary () :
+	logger	(nullptr),
+	input	(nullptr),
+	output	(nullptr),
+	row		(0),
+	column	(0)
 {
-	// TODO: Default initializations
 }
 
-QuexPipeLibrary::~QuexPipeLibrary()
+QuexPipeLibrary::~QuexPipeLibrary ()
 {
-	delete output;  // deletes also the sources (lexers) recursivelly
+	delete output;  // TODO deletes also the sources (lexers) recursivelly
 	delete logger;	
 }
 
-FileStatus QuexPipeLibrary::input_file(const String8& path)
+FileStatus QuexPipeLibrary::input_file (const String8& path)
 {
-	
+	// TODO ITextInput -> FileInput, ConsoleInput
 }
 
-FileStatus QuexPipeLibrary::output_file(const String8& path, FileOutputMode mode)
+FileStatus QuexPipeLibrary::output_file (const String8& path, FileOutputMode mode)
 {
-	
+	// TODO ITextInput -> FileOutput, ConsoleOutput
 }
 
-LexerStatus QuexPipeLibrary::add_lexer(const String8& lexer, const String8& from)
+LexerStatus QuexPipeLibrary::add_lexer (const String8& name, const String8& from)
 {
-	
+	ILexer* currentLexer = LexerLoader::instance ().create_lexer (name, from);
+	if (currentLexer == nullptr)
+		return LexerNotFound;
+	if (lexers.size () == 0)
+		currentLexer->set_source (input);
+	else
+		currentLexer->set_source (lexers.back ());
+	lexers.push_back (currentLexer);
+	return LexerOk;
 }
 
-AnalysisResult QuexPipeLibrary::run()
+AnalysisResult QuexPipeLibrary::run ()
 {
-	
+	if (logger == nullptr)
+		logger = new NULLLogger;
+	if (input == nullptr)
+		return InputMissing;
+	if (output == nullptr)
+		return OutputMissing;
+	// TODO complete
 }
 
 
