@@ -3,9 +3,13 @@
 
 #include "quexpipe.hpp"
 
+
+// --- class declaration: FileInput -----------------------------------------------------------------------------------
+
 class FileInput : public ITextInput
 {
 	std::ifstream*	infile;
+	Status			status;
 public:
 			FileInput (const String8& name);
 	virtual ~FileInput ();
@@ -17,6 +21,9 @@ public:
 	virtual Status read_string32	(String32& output, size_t& row, size_t& column) override;
 };
 
+
+
+// --- class declaration: ConsoleInput -----------------------------------------------------------------------------------
 
 class ConsoleInput : public ITextInput
 {
