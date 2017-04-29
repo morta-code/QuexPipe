@@ -4,7 +4,8 @@ cmake_minimum_required (VERSION 2.8)
 set (QUEXPIPE_VERSION_MAJOR 2) # Main version: feature changes
 set (QUEXPIPE_VERSION_MINOR 0) # Minor verson: API changes
 set (QUEXPIPE_VERSION_BUILD 0) # Build verson: API is compatible, but the headers can change
-set (CMAKE_CXX_FLAGS "-std=c++11")
+set (CMAKE_CXX_STANDARD 14)
+
 if (WIN32)
 	add_definitions (-DQP_PLATFORM_WINDOWS)
 endif (WIN32)
