@@ -79,7 +79,7 @@ using Vector			= std::vector<T>;
 
 // --- enumerators -----------------------------------------------------------------------------------------------------
 
-enum LibraryStatus : char
+enum LibraryStatus
 {
 	LibraryLoaded,
 	LibraryNotFound,
@@ -90,14 +90,14 @@ enum LibraryStatus : char
 };
 
 
-enum FileOutputMode : char
+enum FileOutputMode
 {
 	NewFile	= 'n',
 	Append	= 'a'
 };
 
 
-enum FileStatus : char
+enum FileStatus
 {
 	FileOpened,
 	FileNotExists,
@@ -105,14 +105,14 @@ enum FileStatus : char
 };
 
 
-enum LexerStatus : char
+enum LexerStatus
 {
 	LexerOk,
 	LexerNotFound
 };
 
 
-enum AnalysisResult : char
+enum AnalysisResult
 {
 	ResultOk,
 	InputMissing,
@@ -121,7 +121,7 @@ enum AnalysisResult : char
 };
 
 
-enum Encoding : char
+enum Encoding
 {
 	Utf8,
 	Utf16,
