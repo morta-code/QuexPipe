@@ -158,3 +158,12 @@ LibraryStatus LexerLoader::load_library (const String8& path)
 }
 #endif
 
+
+LexerLoader::LibHandler::LibHandler (const String8& nameInit,
+									 const HandlePtr handleInit,
+									 const LexerFactoryMap& lexerMapInit) :
+	name (nameInit),
+	handler (handleInit),
+	lexerMap (lexerMapInit)
+{
+}

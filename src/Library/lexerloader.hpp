@@ -30,11 +30,14 @@ using HandlePtr		= HMODULE;
 // Loads the entire library, not only the lexer (later function)
 class LexerLoader
 {
-	struct LibHandler
+	class LibHandler
 	{
+	public:
 		String8			name;
 		HandlePtr		handler;
 		LexerFactoryMap	lexerMap;
+		
+		LibHandler		(const String8& nameInit, const HandlePtr handleInit, const LexerFactoryMap& lexerMapInit);
 	};
 	
 	class FindLoaded
