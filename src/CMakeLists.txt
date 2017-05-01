@@ -1,4 +1,4 @@
-project (QuexPipe)
+﻿project (QuexPipe)
 cmake_minimum_required (VERSION 2.8)
 
 set (QUEXPIPE_VERSION_MAJOR 2) # Main version: feature changes
@@ -31,7 +31,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/CommonHeaders")
 
 
 
-add_library (QuexPipe ${LIB_LIST} ${HEAD_LIST})
+add_library (QuexPipe SHARED ${LIB_LIST} ${HEAD_LIST})
 add_executable (quexpipemain ${MAIN_LIST} ${HEAD_LIST})
 target_link_libraries (quexpipemain QuexPipe)
 

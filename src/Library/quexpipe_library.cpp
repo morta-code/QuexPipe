@@ -1,11 +1,11 @@
-// --- includes --------------------------------------------------------------------------------------------------------
+﻿// --- includes --------------------------------------------------------------------------------------------------------
 
 #include	"quexpipe.hpp"  // TODO elég lenne csak azokat a típusokat, amik itt is előfordulnak.
 #include	"quexpipe_library.hpp"
 #include	"lexerloader.hpp"
 #include	"stdlog_logger.hpp"
 #include	"stdinputs.hpp"
-#include	<paths.h>
+//#include	<paths.h>
 
 // --- class definition: QuexPipeLibrary -------------------------------------------------------------------------------
 
@@ -47,6 +47,7 @@ FileStatus QuexPipeLibrary::input_file (const String8& path)
 FileStatus QuexPipeLibrary::output_file (const String8& path, FileOutputMode mode)
 {
 	// TODO ITextInput -> FileOutput, ConsoleOutput
+	return FileOpened;
 }
 
 LexerStatus QuexPipeLibrary::add_lexer (const String8& name, const String8& from)

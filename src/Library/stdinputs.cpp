@@ -1,4 +1,4 @@
-#include "stdinputs.hpp"
+﻿#include "stdinputs.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -71,6 +71,7 @@ ITextInput::Status ConsoleInput::get_status ()
 ITextInput::Status ConsoleInput::read_string8 (String8& output, size_t& row, size_t& column)
 {
 	// TODO
+	return Error;
 }
 
 ITextInput::Status ConsoleInput::read_string16 (String16& output, size_t& row, size_t& column)

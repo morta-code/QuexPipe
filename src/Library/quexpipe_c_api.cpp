@@ -1,4 +1,4 @@
-/// quexpipe_c_api.cpp
+﻿/// quexpipe_c_api.cpp
 /// 
 /// This file is a part of the QuexPipe.
 /// © Móréh, Tamás 2016-2017
@@ -76,7 +76,7 @@ char*	qp_available_lexers		()
 	}
 	if (loaded.size () > 0)
 		lexernames.erase (lexernames.size ()-1);
-	return strdup (lexernames.c_str ());
+	return ::strdup (lexernames.c_str ());
 }
 
 
