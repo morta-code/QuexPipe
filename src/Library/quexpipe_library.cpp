@@ -1,11 +1,9 @@
 ﻿// --- includes --------------------------------------------------------------------------------------------------------
 
-#include	"quexpipe.hpp"  // TODO elég lenne csak azokat a típusokat, amik itt is előfordulnak.
 #include	"quexpipe_library.hpp"
 #include	"lexerloader.hpp"
 #include	"stdlog_logger.hpp"
 #include	"stdinputs.hpp"
-//#include	<paths.h>
 
 // --- class definition: QuexPipeLibrary -------------------------------------------------------------------------------
 
@@ -72,6 +70,7 @@ AnalysisResult QuexPipeLibrary::run ()
 	if (output == nullptr)
 		return OutputMissing;
 	// TODO complete
+	return Error;
 }
 
 

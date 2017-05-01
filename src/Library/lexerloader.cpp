@@ -10,7 +10,7 @@
 // --- includes --------------------------------------------------------------------------------------------------------
 
 #include	<algorithm>
-#include	"quexpipe.hpp"	// TODO kell itt minden?
+#include	"quexpipe.hpp"
 #include	"lexerloader.hpp"
 
 #if defined (QP_PLATFORM_UNIX) // All POSIX systems: Linux, BSD, macOS
@@ -119,7 +119,7 @@ LibraryStatus LexerLoader::load_library (const String8& path)
 		return LibraryNotCompatible;
 	}
 	
-	if (ld_api_version () != api_version ()) {
+	if (ld_api_version () != ld_api_version ()) {
 		// The loaded library's version is not the corresponding
 		// TODO more sophisticated check
 		dlclose (libHandle);

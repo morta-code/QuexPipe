@@ -1,7 +1,7 @@
 #ifndef STDINPUTS_HPP
 #define STDINPUTS_HPP
 
-#include "quexpipe.hpp"
+#include	"interfaces.hpp"
 
 
 // --- class declaration: FileInput -----------------------------------------------------------------------------------

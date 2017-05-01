@@ -4,7 +4,7 @@
 // --- includes --------------------------------------------------------------------------------------------------------
 
 #include	<iostream>
-#include	"quexpipe.hpp"
+#include	"interfaces.hpp"
 
 
 
